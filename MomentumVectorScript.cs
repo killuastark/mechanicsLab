@@ -38,7 +38,7 @@ public class MomentumVectorScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        vector_colour = Color.white;
+        vector_colour = Color.red;
 
         //float startPosition_x = (Camera.main.ScreenToWorldPoint(Input.mousePosition)).x + vector_offset_x;
         //float startPosition_y = 1f;

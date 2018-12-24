@@ -34,13 +34,13 @@ public class FallingBallViscometerScript : MonoBehaviour {
         radius_input.onEndEdit.AddListener(delegate { ChangeRadius(); });
 
         //set starting properties
-        radius = 1f;                //starts with a ball of 1cm radius
-        viscosity = 8.9E-4f;        //starts with water
+        radius = 0.5f;                //starts with a ball of 0.5cm radius
+        viscosity = 3f;        //starts with maple syrup
         density = 8050f;            //starts with steel ball
-        density_fluid = 1000f;     //starts with water as liquid
+        density_fluid = 1370f;     //starts with maple syrup as liquid
         rb.mass = CalculateMass(density, radius/100);
         weight = rb.mass * Physics.gravity.y;
-        radius_input.text = "1";
+        radius_input.text = "0.5";
 
         //set physics timescale
         Time.fixedDeltaTime = 0.01f;
@@ -61,7 +61,7 @@ public class FallingBallViscometerScript : MonoBehaviour {
     private float CalculateUpthrust()
     {
         float upthrust;
-        upthrust = -1*((4 / 3) * Mathf.PI * radius/100 * radius/100 * radius/100) * density_fluid * Physics.gravity.y;
+        upthrust = -1*((4 / 3f) * Mathf.PI * radius/100 * radius/100 * radius/100) * density_fluid * Physics.gravity.y;
         return upthrust;
     }
 
@@ -72,7 +72,7 @@ public class FallingBallViscometerScript : MonoBehaviour {
         //drag is only applied if the ball is falling 
         if (vel < 0)
         {
-            float drag = -1 * 6 * Mathf.PI * radius / 100 * viscosity * vel;     //ball will fall in the y direction and drag acts in the opposite direction to the velocity
+            float drag = -1 * 6 * Mathf.PI * radius / 100 * viscosity * vel/100;     //ball will fall in the y direction and drag acts in the opposite direction to the velocity
             return drag;
         }
         else
@@ -111,11 +111,11 @@ public class FallingBallViscometerScript : MonoBehaviour {
     //ChangeLiquid sets the viscosity of the liquid
     private void ChangeLiquid()
     {
-        //water viscosity = 8.9 E-4 Pa.s
+        //maple syrup
         if (liquid_dropdown.value == 0)
         {
-            viscosity = 8.9E-4f;
-            density_fluid = 1000f;     //density of water 1000kg/m3
+            viscosity = 3f;
+            density_fluid = 1370f;     
         }
         //honey viscosity = 10 Pa.s
         else if (liquid_dropdown.value == 1)
@@ -129,11 +129,11 @@ public class FallingBallViscometerScript : MonoBehaviour {
             viscosity = 0.2f;
             density_fluid = 865f;
         }
-        //air 20 E-6 Pa.s
+        //molasses 5 Pa.s
         else
         {
-            viscosity = 20E-6f;
-            density_fluid = 1.225f;
+            viscosity = 5f;
+            density_fluid = 1400f;
         }
 
         ResetBallPosition();
@@ -148,7 +148,7 @@ public class FallingBallViscometerScript : MonoBehaviour {
         if(float.TryParse(radius_input.text,out r))
         {
             radius = r;         //set the radius variable
-            transform.localScale = new Vector3(r, r, r);    //set the scale of the falling ball gameobject
+            transform.localScale = new Vector3(2*r, 2*r, 2*r);    //set the scale of the falling ball gameobject
         }
         rb.mass = CalculateMass(density, radius/100);
         weight = rb.mass * Physics.gravity.y;
@@ -157,7 +157,8 @@ public class FallingBallViscometerScript : MonoBehaviour {
 
     private float CalculateMass(float density, float r)
     {
-        float M = (4 / 3) * Mathf.PI * (r * r * r) * density;
+        float M = (4 / 3f) * Mathf.PI * (r * r * r) * density;
+        
         return M;
     }
 

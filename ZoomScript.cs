@@ -5,6 +5,11 @@ using UnityEngine;
 public class ZoomScript : MonoBehaviour {
 
     public Camera cam;
+
+    public float maxSize = 20;
+    public float minSize = 2;
+    public float maxFOV = 70;
+    public float minFOV = 20;
 	// Use this for initialization
 	void Start () {
 		
@@ -18,7 +23,7 @@ public class ZoomScript : MonoBehaviour {
             {
                 float currentSize = cam.orthographicSize;
                 float newSize = currentSize + 0.5f;
-                if (newSize < 20)   //maximum effective field of view
+                if (newSize < maxSize)   //maximum effective field of view
                 {
                     cam.orthographicSize = newSize;
                 }
@@ -28,7 +33,7 @@ public class ZoomScript : MonoBehaviour {
             {
                 float current_fov = cam.fieldOfView;
                 float new_fov = current_fov += 1f;
-                if(new_fov < 70)
+                if(new_fov < maxFOV)
                 {
                     cam.fieldOfView = new_fov;
                 }
@@ -39,7 +44,7 @@ public class ZoomScript : MonoBehaviour {
             {
                 float currentSize = cam.orthographicSize;
                 float newSize = currentSize - 0.5f;
-                if (newSize > 2)        //minimum effective field of view
+                if (newSize > minSize)        //minimum effective field of view
                 {
                     cam.orthographicSize = newSize;
                 }
@@ -48,7 +53,7 @@ public class ZoomScript : MonoBehaviour {
             {
                 float current_fov = cam.fieldOfView;
                 float new_fov = current_fov -= 1f;
-                if (new_fov > 20)
+                if (new_fov > minFOV)
                 {
                     cam.fieldOfView = new_fov;
                 }

@@ -22,7 +22,7 @@ public class NewMassButtonScript : MonoBehaviour {
     {
         //Create the mass and position it above the field of view so that it falls into place
         GameObject newMass = Instantiate(mass_prefab) as GameObject;
-        newMass.transform.position = new Vector3(plank.position.x + 2, plank.position.y + 10, plank.position.z - 2);
+        newMass.transform.position = new Vector3(plank.position.x + 2, plank.position.y + 2, plank.position.z - 2);
 
         //Instantiate the inputfield prefab and position it where the mass is.
         //It is not updated here.
@@ -34,6 +34,8 @@ public class NewMassButtonScript : MonoBehaviour {
 
         //Attach the input field to the new mass
         newMass.GetComponent<MomentsMassUIScript>().inputField = massInput.GetComponent<InputField>();
+
+        
 
     }
 }

@@ -11,7 +11,7 @@ public class DoublePendulumEquations: MonoBehaviour{
     public Vector4 func(float t, Vector4 x, float h, float l1, float l2, float m1, float m2)
     {
         Vector4 dxdt = new Vector4();
-
+    
         dxdt[0] = x[2];        //d(theta)/dt = omega1
         //Debug.Log("dxdt[0] = " + dxdt[0]);
         dxdt[1] = x[3];

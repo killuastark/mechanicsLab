@@ -102,6 +102,6 @@ public class rulerScriptMoments : MonoBehaviour
     private void displayLength()
     {
         float mag = Vector3.Magnitude(endPoint - startPoint);
-        display.text = mag.ToString("F1");          //1 decimal place
+        display.text = mag.ToString("F2");          //2 decimal place
     }
 }

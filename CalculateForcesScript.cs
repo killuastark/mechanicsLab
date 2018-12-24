@@ -40,8 +40,7 @@ public class CalculateForcesScript : MonoBehaviour {
         return reaction;
     }
 
-    //Currently, only a single friction value is used, the static friction one.
-    //IMPLEMENT a changing friction value later.
+    
     private float CalculateFriction(float reaction)
     {
         //Instead of only getting the ramp friction, have adapted this in order to get the friction of whatever the mass

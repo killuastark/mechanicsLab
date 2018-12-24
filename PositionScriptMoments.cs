@@ -13,6 +13,8 @@ public class PositionScriptMoments : MonoBehaviour
     public float offset_y;
     public float offset_z;
 
+    public bool isFixed;           //whether this mass should be moveable by the user or not: two different boxes have been made as prefabs
+
     private BoxCollider col;           //the collider attached to mass gameobject
     // Use this for initialization
     void Start()
@@ -25,7 +27,7 @@ public class PositionScriptMoments : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && handleClicked == true)
+        if (Input.GetMouseButton(0) && handleClicked == true && !isFixed)
         {
             //disable the collider so that things don't get knocked around whilst moving the mass
             col.enabled = false;
@@ -52,4 +54,6 @@ public class PositionScriptMoments : MonoBehaviour
     {
         handleClicked = false;
     }
+
+    
 }

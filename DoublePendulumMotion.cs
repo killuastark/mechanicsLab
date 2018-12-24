@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Equations of motion for the double pendula
+//Runs the RK4 integrator to calculate position and sets position of pendulums.
 //Calculates the new angle of the pendulum at the next time step t + h
 //Motion of each pendulum depends on the other
 public class DoublePendulumMotion : MonoBehaviour {
@@ -19,7 +19,7 @@ public class DoublePendulumMotion : MonoBehaviour {
     private List<Vector3> pendulum2_positions;
     
     
-    private float l1;       //properties of the pendula.
+    private float l1;       //properties of the pendulums.
     private float l2;
     private float m1;
     private float m2;
@@ -34,11 +34,12 @@ public class DoublePendulumMotion : MonoBehaviour {
         pendulum2_positions = new List<Vector3>();
         
 
-        l1 = 10;
+        l1 = 10;            //default values for lengths and masses
         l2 = 10;
         m1 = 1f;
         m2 = 1f;
-        x = new Vector4(2f, 2f, 0.2f, 0.3f);          //TEST initial conditions for double pendulum
+        //x = new Vector4(0f, 0f, 0f, 0f);          //TEST initial conditions for double pendulum
+        SetInitialConditions();
 
         Time.fixedDeltaTime = 0.01f;
         h = Time.fixedDeltaTime;
@@ -55,7 +56,8 @@ public class DoublePendulumMotion : MonoBehaviour {
         //Set the position of each of the pendulums
         SetPendulumPosition(pendulum1, hinge_position, x[0], l1);
         SetPendulumPosition(pendulum2, pendulum1.transform.position, x[1], l2);
-	}
+        
+    }
 
     //INPUT: the pendulum transform to set, the position from which the angle is set, the angle the pendulum is at and the length of the pendulum string.
     //OUTPUT: Sets the transform with no output
@@ -65,5 +67,46 @@ public class DoublePendulumMotion : MonoBehaviour {
         float new_y = from[1] - l * Mathf.Cos(angle);
 
         pendulum.position = new Vector3(new_x, new_y, pendulum.position.z);
+    }
+
+    public void SetInitialConditions()
+    {
+        x = new Vector4();
+        x[0] = Vector3.SignedAngle(Vector3.up, hinge.position - pendulum1.position, Vector3.forward) * Mathf.Deg2Rad;
+        x[1] = Vector3.SignedAngle(-Vector3.up, pendulum2.position - pendulum1.position, Vector3.forward)*Mathf.Deg2Rad;
+        x[2] = 0f;
+        x[3] = 0f;
+    }
+
+    //Getters and setters for the mass and length
+
+    public void SetMass1(float mass)
+    {
+        m1 = mass;
+    }
+
+    public void SetMass2(float mass)
+    {
+        m2 = mass;
+    }
+
+    public void SetLength1(float length)
+    {
+        l1 = length;
+    }
+
+    public void SetLength2(float length)
+    {
+        l2 = length;
+    }
+
+    public float GetLength1()
+    {
+        return l1;
+    }
+
+    public float GetLength2()
+    {
+        return l2;
     }
 }
