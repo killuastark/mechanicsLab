@@ -55,7 +55,7 @@ public class MomentsSceneMaster : MonoBehaviour {
         Time.timeScale = 0f;        //freeze time for the setup of masses and forces before the unpause button is clicked
         float hinge_z = Random.Range(-0.5f, 0.5f);     //random position along the plank length
         plank_position = plank.position;
-        hinge.position = new Vector3(plank_position.x, plank_position.y, hinge_z*plank.localScale.z);
+        hinge.position = new Vector3(plank_position.x, plank_position.y, hinge_z*(plank.localScale.z));
         //plank.GetComponent<HingeJoint>().connectedBody = hinge.GetComponent<Rigidbody>();
         plank.GetComponent<HingeJoint>().anchor = new Vector3(0,0,hinge_z);    //anchor position along the plank
         //set random mass of plank between 1 - 10kg.

@@ -11,6 +11,11 @@ public class HyperlinkScript : MonoBehaviour {
 	
 	public void MechanicsLabTutorialSiteLink()
     {
-        Application.OpenURL("https://dpreid.github.io/code_space/physics_mechanicslab.html");
+        Application.OpenURL("https://physics-labs.com/mechanics-lab");
+    }
+
+    public void PhysicsLabsSiteLink()
+    {
+        Application.OpenURL("https://physics-labs.com");
     }
 }

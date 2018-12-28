@@ -4,12 +4,13 @@ using UnityEngine;
 //Outputs the function f(x,y) of the differential equation dy/dx = f(x,y) defined for the double pendulum simulation
 public class DoublePendulumEquations: MonoBehaviour{
 
-    private float g = 9.81f;
+    //private float g = 9.81f;
 
     //INPUT: Vector4 x which defines the quantities at this time step
     //      x[0] = theta1, x[1] = theta2, x[2] = omega1, x[3] = omega2      theta = angular displacement in radians, omega = angular velocity
     public Vector4 func(float t, Vector4 x, float h, float l1, float l2, float m1, float m2)
     {
+        float g = Mathf.Abs(Physics.gravity.y);
         Vector4 dxdt = new Vector4();
     
         dxdt[0] = x[2];        //d(theta)/dt = omega1

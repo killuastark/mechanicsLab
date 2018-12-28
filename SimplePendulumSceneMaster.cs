@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SimplePendulumSceneMaster : MonoBehaviour {
 
@@ -17,7 +18,10 @@ public class SimplePendulumSceneMaster : MonoBehaviour {
     public Transform pendulum10;
     public Transform pendulum11;
 
-    private List<Transform> pendulums;
+    public List<Transform> pendulums;
+
+    public Text help_text;
+    public Button stopclock_button;
     
     private float[] lengths = new float[11] { 8.9456f, 6.2123f, 4.5641f, 3.4944f, 2.7610f, 2.2364f, 1.8483f, 1.5531f,1.3233f,1.1410f,0.99396f };
 
@@ -42,9 +46,19 @@ public class SimplePendulumSceneMaster : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown("escape"))
+        if (Input.GetMouseButtonDown(1))
+        {
+            stopclock_button.GetComponent<StopClockScript>().Clicked();
+        }
+        else if (Input.GetKeyDown("escape"))
         {
             SceneManager.LoadScene(0);
+        } else if (Input.GetKeyDown("r"))
+        {
+            SceneManager.LoadScene(11);
+        } else if (Input.GetKeyDown("h"))
+        {
+            DisplayHelpText();
         }
 	}
 
@@ -59,5 +73,17 @@ public class SimplePendulumSceneMaster : MonoBehaviour {
             i++;
         }
 
+    }
+
+    private void DisplayHelpText()
+    {
+        if (help_text.IsActive())
+        {
+            help_text.enabled = false;
+        }
+        else
+        {
+            help_text.enabled = true;
+        }
     }
 }

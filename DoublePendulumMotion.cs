@@ -24,7 +24,7 @@ public class DoublePendulumMotion : MonoBehaviour {
     private float m1;
     private float m2;
 
-    private float h;            //the time step
+    //private float h;            //the time step
     private Vector4 x;             //the current state of the pendulums Vector4(theta1, theta2, omega1, omega2)
 
 	// Use this for initialization
@@ -42,13 +42,13 @@ public class DoublePendulumMotion : MonoBehaviour {
         SetInitialConditions();
 
         Time.fixedDeltaTime = 0.01f;
-        h = Time.fixedDeltaTime;
+        
 	}
 	
 	// FixedUpdate is called every time step h
     //change the Time.fixedDeltaTime to change h
 	void FixedUpdate () {
-        x = rk4.RK4(Time.time, x, h, l1, l2, m1, m2);
+        x = rk4.RK4(Time.time, x, Time.fixedDeltaTime, l1, l2, m1, m2);
         //Debug.Log("X = " + x);
         //Store the current position
         //pendulum1_positions.Add(pendulum1.position);
@@ -90,6 +90,16 @@ public class DoublePendulumMotion : MonoBehaviour {
         m2 = mass;
     }
 
+    public float GetMass1()
+    {
+        return m1;
+    }
+
+    public float GetMass2()
+    {
+        return m2;
+    }
+
     public void SetLength1(float length)
     {
         l1 = length;
@@ -109,4 +119,9 @@ public class DoublePendulumMotion : MonoBehaviour {
     {
         return l2;
     }
+
+    //public void ChangeTimeStep(float new_step)
+    //{
+    //    h = new_step;
+    //}
 }

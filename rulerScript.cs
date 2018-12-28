@@ -29,6 +29,8 @@ public class rulerScript : MonoBehaviour {
     private Transform crossStart;
     private Transform crossEnd;
 
+    public float z_pos = 2f;
+
     private float rayWidth = 0.05f;
 
     // Use this for initialization
@@ -41,7 +43,7 @@ public class rulerScript : MonoBehaviour {
         if (Input.GetMouseButtonDown(1) && numPoints == 0)  //assign the start point of the line
         {
             startPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            startPoint.z = 2f;      //ensure that line is above background and level in the z plane
+            startPoint.z = z_pos;      //ensure that line is above background and level in the z plane
             startPoint.x += offset_x;  //add offset and get middle of ray to correct point
             startPoint.y += offset_y;
             numPoints++;
@@ -51,7 +53,7 @@ public class rulerScript : MonoBehaviour {
         } else if(Input.GetMouseButtonDown(1) && numPoints == 1)    //if 1 click has already happened then assign the end point of the line
         {
             endPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            endPoint.z = 2f;
+            endPoint.z = z_pos;
             endPoint.x += offset_x;
             endPoint.y += offset_y;
             numPoints++;

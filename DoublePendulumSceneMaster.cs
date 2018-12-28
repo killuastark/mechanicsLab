@@ -22,6 +22,9 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
     public Slider length1_slider;
     public Slider length2_slider;
     public Toggle trail_toggle;
+    public InputField gravity_input;
+    public InputField timestep_input;
+
 
     private Vector3 prev_position1;
     private Vector3 prev_position2;
@@ -31,12 +34,14 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
     //limiting values
     float max_mass = 10f;
     float max_length = 50f;
+    [SerializeField] private float minTimeStep = 0.001f;
+    [SerializeField] private float maxTimeStep = 0.5f;
 
     //lighting and trails/paths
     private bool trailOn;           //if a trail should be drawn
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         trailOn = false;                //start with no trail
         trail_toggle.isOn = false;
 
@@ -47,7 +52,7 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
         dp_motion = hinge.GetComponent<DoublePendulumMotion>();
 
         //set listeners
-        mass1_input.onEndEdit.AddListener(delegate { UpdateMass(1,"input"); });
+        mass1_input.onEndEdit.AddListener(delegate { UpdateMass(1, "input"); });
         mass2_input.onEndEdit.AddListener(delegate { UpdateMass(2, "input"); });
         mass1_slider.onValueChanged.AddListener(delegate { UpdateMass(1, "slider"); });
         mass2_slider.onValueChanged.AddListener(delegate { UpdateMass(2, "slider"); });
@@ -56,10 +61,21 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
         length1_slider.onValueChanged.AddListener(delegate { UpdateLength(1, "slider"); });
         length2_slider.onValueChanged.AddListener(delegate { UpdateLength(2, "slider"); });
         trail_toggle.onValueChanged.AddListener(delegate { UpdateTrail(); });
+        gravity_input.onEndEdit.AddListener(delegate { UpdateGravity(); });
+        timestep_input.onEndEdit.AddListener(delegate { UpdateTimeStep(); });
+
+        //Set values for the pendulum properties
+        mass1_input.text = dp_motion.GetMass1().ToString("F2");
+        mass2_input.text = dp_motion.GetMass2().ToString("F2");
+        length1_input.text = dp_motion.GetLength1().ToString("F2");
+        length2_input.text = dp_motion.GetLength2().ToString("F2");
+        gravity_input.text = Mathf.Abs(Physics.gravity.y).ToString("F2");
+        timestep_input.text = Time.fixedDeltaTime.ToString("F2");
+
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         //get the positions of the pendulums
         Vector3 current_pos1 = pendulum1.position;
         Vector3 current_pos2 = pendulum2.position;
@@ -103,9 +119,9 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
         float new_mass;
         if (field.Equals("input"))
         {
-            if(mass == 1)
+            if (mass == 1)
             {
-                if(float.TryParse(mass1_input.text, out new_mass))
+                if (float.TryParse(mass1_input.text, out new_mass))
                 {
                     if (new_mass != 0 && new_mass <= max_mass)
                     {
@@ -119,7 +135,7 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
             {
                 if (float.TryParse(mass2_input.text, out new_mass))
                 {
-                    if(new_mass != 0 && new_mass <= max_mass)
+                    if (new_mass != 0 && new_mass <= max_mass)
                     {
                         dp_motion.SetMass2(new_mass);
                         mass2_slider.value = new_mass;
@@ -129,7 +145,7 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
         }
         else
         {
-            if(mass == 1)
+            if (mass == 1)
             {
                 new_mass = mass1_slider.value;
                 mass1_input.text = new_mass.ToString("F2");
@@ -153,12 +169,12 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
             {
                 if (float.TryParse(length1_input.text, out new_length))
                 {
-                    if(new_length != 0 && new_length <= max_length)
+                    if (new_length != 0 && new_length <= max_length)
                     {
                         dp_motion.SetLength1(new_length);
                         length1_slider.value = new_length;
                     }
-                    
+
                 }
 
             }
@@ -203,5 +219,49 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
             trailOn = true;
         }
 
+    }
+
+    private void UpdateGravity()
+    {
+        float grav;
+        if (float.TryParse(gravity_input.text, out grav))
+        {
+            if (grav > 0 && grav < 20)
+            {
+                Physics.gravity = new Vector3(0, -grav, 0);
+            }
+            else
+            {
+                Physics.gravity = new Vector3(0, -9.81f, 0);
+                gravity_input.text = "9.81";
+            }
+        }
+        else
+        {
+            Physics.gravity = new Vector3(0, -9.81f, 0);
+            gravity_input.text = "9.81";
+        }
+    }
+
+    private void UpdateTimeStep()
+    {
+        float delta_t;
+        if(float.TryParse(timestep_input.text,out delta_t))
+        {
+            if(delta_t >= minTimeStep && delta_t < maxTimeStep)
+            {
+                Time.fixedDeltaTime = delta_t;
+            }
+            else
+            {
+                Time.fixedDeltaTime = 0.01f;
+                timestep_input.text = "0.01";
+            }
+        }
+        else
+        {
+            Time.fixedDeltaTime = 0.01f;
+            timestep_input.text = "0.01";
+        }
     }
 }

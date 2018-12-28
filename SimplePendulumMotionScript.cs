@@ -31,7 +31,7 @@ public class SimplePendulumMotionScript : MonoBehaviour {
         origin_x = hinge.position.x;
         origin_y = hinge.position.y;
 
-        Time.fixedDeltaTime = 0.01f;        //this is the time between each fixed update calculation below, may allow user to change
+        Time.fixedDeltaTime = 0.005f;        //this is the time between each fixed update calculation below, may allow user to change
         delta_t = Time.fixedDeltaTime;
 
         attach_position = new Vector3(origin_x, origin_y, z_pos);

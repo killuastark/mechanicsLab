@@ -59,9 +59,6 @@ public class CollisionFrictionScript : MonoBehaviour {
     private void UpdateAcceleration()
     {
         resultant = forcesScript.GetParallelForce() - forcesScript.GetFriction();     //resultant along slope
-        //Debug.Log("Fp = " + forcesScript.GetParallelForce());
-        //Debug.Log("Ff = " + forcesScript.GetFriction());
-        Debug.Log("F = " + resultant);
         if(resultant < 0)     
         {
             accelerationText.text = "0";
