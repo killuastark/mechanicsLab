@@ -11,6 +11,8 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
     public Transform hinge;
     public Transform pendulum1;
     public Transform pendulum2;
+    private GameObject wire1;
+    private GameObject wire2;
 
     //UI inputs
     public InputField mass1_input;
@@ -24,7 +26,7 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
     public Toggle trail_toggle;
     public InputField gravity_input;
     public InputField timestep_input;
-
+    public Slider trail_time_slider;
 
     private Vector3 prev_position1;
     private Vector3 prev_position2;
@@ -39,9 +41,14 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
 
     //lighting and trails/paths
     private bool trailOn;           //if a trail should be drawn
+    public float trailTime;         //the time that trail paricles should remain
 
     // Use this for initialization
     void Start() {
+        //Draw the two wires - these are initialised here and then moved position in update
+        wire1 = DrawWire(hinge.position, pendulum1.position, false, wireMaterial);
+        wire2 = DrawWire(pendulum1.position, pendulum2.position, false, wireMaterial);
+
         trailOn = false;                //start with no trail
         trail_toggle.isOn = false;
 
@@ -63,6 +70,7 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
         trail_toggle.onValueChanged.AddListener(delegate { UpdateTrail(); });
         gravity_input.onEndEdit.AddListener(delegate { UpdateGravity(); });
         timestep_input.onEndEdit.AddListener(delegate { UpdateTimeStep(); });
+        trail_time_slider.onValueChanged.AddListener(delegate { UpdateTrailTime(); });
 
         //Set values for the pendulum properties
         mass1_input.text = dp_motion.GetMass1().ToString("F2");
@@ -79,21 +87,23 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
         //get the positions of the pendulums
         Vector3 current_pos1 = pendulum1.position;
         Vector3 current_pos2 = pendulum2.position;
-        //Draw in the wire attaching each to the next (and hinge) but remember to destroy these after a frame
-        DrawWire(hinge.position, current_pos1, true, wireMaterial);
-        DrawWire(current_pos1, current_pos2, true, wireMaterial);
+        //Reposition the wire gameobjects
+        RepositionWire(wire1, hinge.position, current_pos1);
+        RepositionWire(wire2, current_pos1, current_pos2);
+        //DrawWire(hinge.position, current_pos1, true, wireMaterial);
+        //DrawWire(current_pos1, current_pos2, true, wireMaterial);
 
         //Draw path
         if (trailOn)
         {
-            DrawWire(prev_position2, current_pos2, false, pathMaterial);
+            DrawWire(prev_position2, current_pos2, true, pathMaterial);
         }
         prev_position1 = current_pos1;
         prev_position2 = current_pos2;
     }
 
     //method for drawing rays
-    private void DrawWire(Vector3 startPosition, Vector3 endPosition, bool destroy, Material mat)
+    private GameObject DrawWire(Vector3 startPosition, Vector3 endPosition, bool destroy, Material mat)
     {
         GameObject line = new GameObject();
         line.AddComponent<LineRenderer>();
@@ -107,9 +117,18 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
 
         if (destroy)
         {
-            Destroy(line, Time.deltaTime);
+            Destroy(line, trailTime);
         }
 
+        return line;
+
+    }
+
+    private void RepositionWire(GameObject line, Vector3 startPosition, Vector3 endPosition)
+    {
+        LineRenderer wire = line.GetComponent<LineRenderer>();
+        wire.SetPosition(0, startPosition);
+        wire.SetPosition(1, endPosition);
     }
 
     //a function to update the mass of the pendulum
@@ -263,5 +282,10 @@ public class DoublePendulumSceneMaster : MonoBehaviour {
             Time.fixedDeltaTime = 0.01f;
             timestep_input.text = "0.01";
         }
+    }
+
+    private void UpdateTrailTime()
+    {
+        trailTime = trail_time_slider.value;
     }
 }

@@ -14,13 +14,10 @@ public class DoublePendulumEquations: MonoBehaviour{
         Vector4 dxdt = new Vector4();
     
         dxdt[0] = x[2];        //d(theta)/dt = omega1
-        //Debug.Log("dxdt[0] = " + dxdt[0]);
         dxdt[1] = x[3];
-        //Debug.Log("dxdt[1] = " + dxdt[1]);
         dxdt[2] = (-g * (2 * m1 + m2) * Mathf.Sin(x[0]) - m2 * g * Mathf.Sin(x[0] - 2 * x[1]) - 2 * Mathf.Sin(x[0] - x[1]) * m2 * (x[3] * x[3] * l2 + x[2] * x[2] * l1 * Mathf.Cos(x[0] - x[1]))) / (l1 * (2 * m1 + m2 - m2 * Mathf.Cos(2 * x[0] - 2 * x[1])));
-        //Debug.Log("dxdt[2] = " + dxdt[2]);
         dxdt[3] = 2 * Mathf.Sin(x[0] - x[1]) * (x[2] * x[2] * l1 * (m1 + m2) + g * (m1 + m2) * Mathf.Cos(x[0]) + x[3] * x[3] * l2 * m2 * Mathf.Cos(x[0] - x[1])) / (l2 * (2 * m1 + m2 - m2 * Mathf.Cos(2 * x[0] - 2 * x[1])));
-        //Debug.Log("dxdt[3] = " + dxdt[3]);
+  
         return dxdt;
 
     }

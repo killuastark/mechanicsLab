@@ -7,7 +7,7 @@ using UnityEngine;
 public class SimplePendulumMotionScript : MonoBehaviour {
 
     public Transform hinge;             //the position from which the pendulum is swinging
-
+    private GameObject wire;
     [SerializeField] private float angle;                //the angle from the vertical which the pendulum is at
     private float omega;                //the pendulum's angular velocity
     public float length;               //the length of the pendulum
@@ -22,6 +22,7 @@ public class SimplePendulumMotionScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        wire = DrawWire(attach_position, transform.position, false);        //initialise the wire support
         //to test, I will simply start the pendulum at a specific angle, but will incorporate user interactivity later
         angle = 0.35f;         //initial angle in radians
         omega = 0f;     //pendulum starts at rest
@@ -40,7 +41,8 @@ public class SimplePendulumMotionScript : MonoBehaviour {
     //for drawing in the pendulum wire
     private void Update()
     {
-        DrawWire(attach_position, transform.position, true);
+        RepositionWire(wire, attach_position, transform.position);
+        
     }
 
 
@@ -70,7 +72,7 @@ public class SimplePendulumMotionScript : MonoBehaviour {
 
 
     //method for drawing rays
-    private void DrawWire(Vector3 startPosition, Vector3 endPosition, bool destroy)
+    private GameObject DrawWire(Vector3 startPosition, Vector3 endPosition, bool destroy)
     {
         GameObject line = new GameObject();
         line.AddComponent<LineRenderer>();
@@ -87,6 +89,14 @@ public class SimplePendulumMotionScript : MonoBehaviour {
             Destroy(line, 0.02f);
         }
 
+        return line;
+    }
+
+    private void RepositionWire(GameObject wire, Vector3 startPosition, Vector3 endPosition)
+    {
+        LineRenderer line = wire.GetComponent<LineRenderer>();
+        line.SetPosition(0, startPosition);
+        line.SetPosition(1, endPosition);
     }
 
 

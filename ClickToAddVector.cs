@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ClickToAddVector : MonoBehaviour {
 
+    public GameObject scenemaster;
+    VectorSceneMaster sm;
     public GameObject vectorSprite_prefab;      //the vector sprite which will be added to the scene
     public float offset_x;
     public float offset_z;
@@ -13,6 +15,7 @@ public class ClickToAddVector : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
+        sm = scenemaster.GetComponent<VectorSceneMaster>();
         vector_count = 0;   //this should be iterated everytime the right mouse button is clicked - ie a vector is drawn
     }
 	
@@ -21,13 +24,16 @@ public class ClickToAddVector : MonoBehaviour {
         if (Input.GetMouseButtonDown(1))
         {
             vector_count += 1;
-            if(vector_count >= 9)   // there are 9 possible colours, so if we get to higher than 9 reset the count
+            if(vector_count >= 7)   // there are 7 possible colours, so if we get to higher than 7 reset the count
             {
                 vector_count = 0;
             }
             GameObject vector = Instantiate(vectorSprite_prefab) as GameObject;
             Vector3 newPosition = new Vector3((Camera.main.ScreenToWorldPoint(Input.mousePosition)).x - offset_x, 1f, (Camera.main.ScreenToWorldPoint(Input.mousePosition)).z - offset_z);
             vector.transform.position = newPosition;
+            //add to the scenemaster list of vectors
+            sm.AddVectorToList(vector);
+            
         }
 	}
 

@@ -33,6 +33,16 @@ public class GravitationalForceScript : MonoBehaviour {
     private float planet_velocity_start;        //the initial velocities of the bodies in the z direction
     private float star_velocity_start;
 
+    //bounds for mass, distance and velocity
+    private float mass_min = 1E-15f;
+    private float mass_max = 100f;          //reasonable for star masses
+    private float distance_min = 0.1f;      //AU
+    private float distance_max = 100f;
+    private float speed_min = 0f;
+    private float speed_max = 1E-5f;
+    private float separation_max = 4000f;
+
+
     //UI objects
     public InputField planet_mass_UI;
     public InputField star_mass_UI;
@@ -107,6 +117,12 @@ public class GravitationalForceScript : MonoBehaviour {
         current_distance.text = (r.magnitude).ToString("F2");
         planet_current_vel.text = (v_planet*vel_ratio).ToString("E2");
         star_current_vel.text = (v_star*vel_ratio).ToString("E2");
+
+        //check that star or planet is not too distant and going beyond the confines of the simulation - if so then reset
+        if(r.magnitude > separation_max)
+        {
+            SceneManager.LoadScene(6);
+        }
     }
 
     //Calculate the gravitational force between the two masses
@@ -154,17 +170,45 @@ public class GravitationalForceScript : MonoBehaviour {
         {
             //velocities will be input in terms of the real velocity in AU/s, but need to be converted to the simulation speed
             // via the vel_ratio.
-            rb_planet.velocity = new Vector3(0,0,float.Parse(planet_vel_UI.text)/vel_ratio);
+            if(planet_velocity_start > speed_min && planet_velocity_start <= speed_max)
+            {
+                rb_planet.velocity = new Vector3(0, 0, float.Parse(planet_vel_UI.text) / vel_ratio);
+            }
+            else if(planet_velocity_start > speed_max)
+            {
+                planet_vel_UI.text = speed_max.ToString("E2");
+                rb_planet.velocity = new Vector3(0, 0, speed_max/vel_ratio);
+            }
+            else
+            {
+                planet_vel_UI.text = speed_min.ToString("E2");
+                rb_planet.velocity = new Vector3(0, 0, speed_min / vel_ratio);
+            }
+            
         }
         else
         {
             rb_planet.velocity = new Vector3(0, 0, circ_velocities[0]);  //bodies start along the x axis, so require velocity tangentially along the z axis
         }
-        
 
+        //=========== the star velocity
         if (float.TryParse(star_vel_UI.text, out star_velocity_start))      //hmmm no need to then reassign it
         {
-            rb_star.velocity = new Vector3(0,0,float.Parse(star_vel_UI.text)/vel_ratio);
+            if(star_velocity_start > speed_min && star_velocity_start <= speed_max)
+            {
+                rb_star.velocity = new Vector3(0, 0, float.Parse(star_vel_UI.text) / vel_ratio);
+
+            } else if(star_velocity_start > speed_max)
+            {
+                star_vel_UI.text = speed_max.ToString("E2");
+                rb_star.velocity = new Vector3(0, 0, speed_max / vel_ratio);
+            }
+            else
+            {
+                star_vel_UI.text = speed_min.ToString("E2");
+                rb_star.velocity = new Vector3(0, 0, speed_min / vel_ratio);
+            }
+            
         }
         else
         {
@@ -177,12 +221,40 @@ public class GravitationalForceScript : MonoBehaviour {
     {
         if (float.TryParse(planet_mass_UI.text, out planet_mass))      //hmmm no need to then reassign it
         {
-            rb_planet.mass = float.Parse(planet_mass_UI.text);
+            if(planet_mass > mass_min && planet_mass <= mass_max)
+            {
+                rb_planet.mass = float.Parse(planet_mass_UI.text);
+            }
+            else if(planet_mass > mass_max)
+            {
+                planet_mass_UI.text = mass_max.ToString("F2");
+                rb_planet.mass = mass_max;
+            }
+            else
+            {
+                planet_mass_UI.text = mass_min.ToString("E2");
+                rb_planet.mass = mass_min;
+            }
+            
         }
 
         if (float.TryParse(star_mass_UI.text, out star_mass))      //hmmm no need to then reassign it
         {
-            rb_star.mass = float.Parse(star_mass_UI.text);
+            if(star_mass > mass_min && star_mass <= mass_max)
+            {
+                rb_star.mass = float.Parse(star_mass_UI.text);
+            }
+            else if(star_mass > mass_max)
+            {
+                star_mass_UI.text = mass_max.ToString("F2");
+                rb_star.mass = mass_max;
+            }
+            else
+            {
+                star_mass_UI.text = mass_min.ToString("E2");
+                rb_star.mass = mass_min;
+            }
+            
         }
     }
 
@@ -193,10 +265,20 @@ public class GravitationalForceScript : MonoBehaviour {
         float initial_dist;
         if(float.TryParse(start_distance.text, out initial_dist))
         {
-            planet.position = new Vector3(-initial_dist, 0, 0);
+            if(initial_dist > distance_min && initial_dist <= distance_max)
+            {
+                planet.position = new Vector3(-initial_dist, 0, 0);
+            }
+            else
+            {
+                planet.position = new Vector3(-1, 0, 0);
+                start_distance.text = "1";
+            }
+            
         }
         else
         {
+            start_distance.text = "1";
             planet.position = new Vector3(-1, 0, 0);        //if nothing input then start it at a distance of 1 (AU)
         }
         

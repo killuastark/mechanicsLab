@@ -23,20 +23,21 @@ public class VectorPositionAndRotation : MonoBehaviour {
     private Text lengthText;     //the UI text boxes for displaying vector information
     private Text angleText;
 
-    private Color vector_colour;        //the colour assigned to this vector, depending on the vector_count at the time of instantiation
+    public Color vector_colour;        //the colour assigned to this vector, depending on the vector_count at the time of instantiation
     // each vector label needs to be offset a little in order not to overlap with others when drawn close to one another
     private Vector3 offset;
 
     //Initialise the possible vector colours
-    private Color[] colours = new Color[] { Color.red, Color.black, Color.blue, Color.green, Color.cyan, Color.yellow, Color.magenta, Color.yellow, Color.grey };
+    private Color[] colours = new Color[] { Color.black, Color.blue, Color.green, Color.cyan, Color.magenta, Color.yellow, Color.grey };
     
     // Use this for initialization
     void Start () {
-        float startPosition_x = (Camera.main.ScreenToWorldPoint(Input.mousePosition)).x + vector_offset_x;
-        float startPosition_y = 1f;
-        float startPosition_z = (Camera.main.ScreenToWorldPoint(Input.mousePosition)).z + vector_offset_z;
-        startPosition = new Vector3(startPosition_x, startPosition_y, startPosition_z);
-
+        //float startPosition_x = (Camera.main.ScreenToWorldPoint(Input.mousePosition)).x + vector_offset_x;
+        //float startPosition_y = 1f;
+        //float startPosition_z = (Camera.main.ScreenToWorldPoint(Input.mousePosition)).z + vector_offset_z;
+        //startPosition = new Vector3(startPosition_x, startPosition_y, startPosition_z);
+        startPosition = new Vector3(transform.position.x, 1f, transform.position.z);
+        endPosition = new Vector3(transform.position.x, 1f, transform.position.z);      //also define end position so that vector is 0 length when initialised
         //get the canvas
         canvas = GameObject.FindGameObjectWithTag("canvas");
 
@@ -80,7 +81,7 @@ public class VectorPositionAndRotation : MonoBehaviour {
         //finalRay.endColor = colour;
         finalRay.startWidth = vectorWidth;
         finalRay.endWidth = vectorWidth;
-
+        vector.transform.SetParent(vector_sprite.transform);        //setting the parent for easy deletion at a later time
         //Destroy(line, 0.02f);
     }
 
@@ -99,11 +100,53 @@ public class VectorPositionAndRotation : MonoBehaviour {
         //Add calculated values to the UI
         //Positions textboxes
         
-        lengthText.text = "Length = " + length.ToString("F1");
+        lengthText.text = "Length = " + length.ToString("F2");
         lengthText.color = vector_colour;
         lengthText.transform.position = Camera.main.WorldToScreenPoint(startPosition + (endPosition - startPosition) / 2 + new Vector3(2,0,0));
-        angleText.text = "Angle = " + angle.ToString("F1");
+        angleText.text = "Angle = " + angle.ToString("F2");
         angleText.color = vector_colour;
         angleText.transform.position = Camera.main.WorldToScreenPoint(startPosition + (endPosition - startPosition) / 2 + new Vector3(2,0,-1));
+    }
+
+    //returns the Vector3 represented by the drawn vector
+    public Vector3 GetVector()
+    {
+        return (endPosition - startPosition);
+    }
+
+    //returns the magnitude of the vector
+    public float GetLength()
+    {
+        Vector3 vector = GetVector();
+        return vector.magnitude;
+    }
+
+    //returns the angle from the horizontal/x axis
+    public float GetAngle()
+    {
+        Vector3 vector = GetVector();
+        //get its angle to the horizontal (x axis)
+        float angle = Vector3.Angle(vector, Vector3.right);
+        return angle;
+    }
+
+    public Vector3 GetStartPosition()
+    {
+        return startPosition;
+    }
+
+    public Vector3 GetEndPosition()
+    {
+        return endPosition;
+    }
+
+    public void SetStartPosition(Vector3 start)
+    {
+        startPosition = start;
+    }
+
+    public void SetEndPosition(Vector3 end)
+    {
+        endPosition = end;
     }
 }
