@@ -27,7 +27,7 @@ public class MomentsNewUpwardForceScript : MonoBehaviour {
         forceInput.transform.SetParent(canvas.transform);
         //input_position = new Vector3(input_position.x, input_position.y, input_position.z + 1);
         forceInput.transform.position = Camera.main.WorldToScreenPoint(input_position);
-
+        forceInput.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);  //scale appropriately for different resolutions
         //Attach the input field to the new force object
         newForce.GetComponent<MomentsUpwardForceUIScript>().inputField = forceInput.GetComponent<InputField>();
     }

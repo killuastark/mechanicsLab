@@ -155,6 +155,7 @@ public class MomentsSceneMaster : MonoBehaviour {
             massInput.transform.SetParent(canvas.transform);
             input_position = new Vector3(input_position.x, input_position.y, input_position.z + 1);
             massInput.transform.position = Camera.main.WorldToScreenPoint(input_position);
+            massInput.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);   //scale appropriately on different resolutions.
             massInput.GetComponent<InputField>().text = box_mass[i].ToString("F0");        //set the text box to the mass of the box
 
             //Attach the input field to the new mass

@@ -30,6 +30,7 @@ public class NewMassButtonScript : MonoBehaviour {
         GameObject massInput = Instantiate(massinput_prefab) as GameObject;
         massInput.transform.SetParent(canvas.transform);
         input_position = new Vector3(input_position.x, input_position.y, input_position.z + 1);
+        massInput.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);   //ensure it scales properly at different resolutions
         massInput.transform.position = Camera.main.WorldToScreenPoint(input_position);
 
         //Attach the input field to the new mass
